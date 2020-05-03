@@ -1,20 +1,23 @@
-function devtool ([String]$src) {
-    # -v C:/prj:/prj
-    $bind = pathValidate $src | mountFolder "/prj"
+function nd ([String]$src, [Int]$port) {
+    $bind = pathValidate $src | mountFolder "/node"
+    $map = $port | ? { $_ -gt 0 -and ($_ -lt 65535) } | % { "-p $_" } # 0 < port < 65535
 
     iex "
         docker create ``
-            --name devtool ``
+            -e TZ=Asia/Hong_Kong ``
+            -P ``
             $bind ``
-            -v devtool:/root/.vscode-server ``
+            $map ``
+            -v node:/root/.vscode-server/extensions ``
+            --tmpfs /root/.cache ``
             --tmpfs /tmp ``
             -i ``
-            tmpac/devtool
+            tmpac/node
     "
 }
 
 function heimdall {
-    docker create `
+    docker run `
         --name heimdall `
         -e PUID=1000 `
         -e PGID=1000 `
@@ -24,7 +27,7 @@ function heimdall {
         linuxserver/heimdall
 }
 
-function rutorrent ([String]$src = "c:/rutorrent", [switch]$create) {
+function rutorrent ([String]$src = "d:/rutorrent", [switch]$create) {
     $container = $MyInvocation.InvocationName
     $entryPort = "80/tcp"
 
@@ -34,6 +37,9 @@ function rutorrent ([String]$src = "c:/rutorrent", [switch]$create) {
         iex "
             docker run ``
                 --name $container ``
+                -e PUID=1000 ``
+                -e PGID=1000 ``
+                -e TZ=Asia/Hong_Kong ``
                 -p 80 ``
                 -p 5000 ``
                 -p 51413 ``
@@ -44,13 +50,12 @@ function rutorrent ([String]$src = "c:/rutorrent", [switch]$create) {
                 linuxserver/rutorrent
         "
     }
+
+    if (docker ps -q -f "name=$container") {
+        explorer "http://localhost:$((docker port $container | rg -w $entryPort).split(":")[-1])/"
+    }
     else {
-        if (docker ps -q -f "name=$container") {
-            explorer "http://localhost:$((docker port $container | rg -w $entryPort).split(":")[-1])/"
-        }
-        else {
-            "$container does not exist"
-        }
+        "$container does not exist"
     }
 }
 
@@ -61,6 +66,7 @@ function portainer ([switch]$create) {
     if ($create) {
         docker run `
             --name $container `
+            -e TZ=Asia/Hong_Kong `
             -P `
             -v /var/run/docker.sock:/var/run/docker.sock `
             -v portainer:/data `
@@ -68,13 +74,12 @@ function portainer ([switch]$create) {
             -d `
             portainer/portainer
     }
+
+    if (docker ps -q -f "name=$container") {
+        explorer "http://localhost:$((docker port $container | rg -w $entryPort).split(":")[-1])/"
+    }
     else {
-        if (docker ps -q -f "name=$container") {
-            explorer "http://localhost:$((docker port $container | rg -w $entryPort).split(":")[-1])/"
-        }
-        else {
-            "$container does not exist"
-        }
+        "$container does not exist"
     }
 }
 
