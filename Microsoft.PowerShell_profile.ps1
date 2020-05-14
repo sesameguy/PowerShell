@@ -44,7 +44,7 @@ function e {
 }
 
 Set-PSReadLineKeyHandler Tab MenuComplete
-#Import-Module powershell-yaml
+# Import-Module powershell-yaml
 . "~\Documents\PowerShell\docker\docker.ps1"
 . "~\Documents\PowerShell\completion\_fd.ps1"
 . "~\Documents\PowerShell\completion\_rg.ps1"
