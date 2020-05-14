@@ -1,5 +1,12 @@
 function laradock {
-    sl ~\php\laradock || git clone https://github.com/Laradock/laradock.git
+    $path = "~\php\laradock"
+    
+    if (Test-Path $path) { }
+    else {
+        git clone https://github.com/Laradock/laradock.git
+    }
+    
+    sl $path
     docker-compose down
     docker-compose up -d nginx mysql workspace
     sl -
