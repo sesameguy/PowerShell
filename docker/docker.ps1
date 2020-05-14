@@ -1,4 +1,28 @@
-function nd ([String]$src, [Int]$port) {
+function laradock {
+    sl ~\php\laradock || git clone https://github.com/Laradock/laradock.git
+    docker-compose down
+    docker-compose up -d nginx mysql workspace
+    sl -
+}
+
+function php ([String]$src = "~\php", [Int]$port) {
+    $bind = pathValidate $src | mountFolder "/php"
+    $map = $port | ? { $_ -gt 0 -and ($_ -lt 65535) } | % { "-p $_" } # 0 < port < 65535
+
+    iex "
+        docker create ``
+            -e TZ=Asia/Hong_Kong ``
+            $map ``
+            $bind ``
+            -v php:/root/.vscode-server/extensions ``
+            --tmpfs /root/.cache ``
+            --tmpfs /tmp ``
+            -i ``
+            tmpac/php
+    "
+}
+
+function nd ([String]$src = "~\node", [Int]$port) {
     $bind = pathValidate $src | mountFolder "/node"
     $map = $port | ? { $_ -gt 0 -and ($_ -lt 65535) } | % { "-p $_" } # 0 < port < 65535
 
@@ -6,8 +30,8 @@ function nd ([String]$src, [Int]$port) {
         docker create ``
             -e TZ=Asia/Hong_Kong ``
             -P ``
-            $bind ``
             $map ``
+            $bind ``
             -v node:/root/.vscode-server/extensions ``
             --tmpfs /root/.cache ``
             --tmpfs /tmp ``
