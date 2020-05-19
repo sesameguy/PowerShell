@@ -4,16 +4,19 @@ function laradock {
 
     if (Test-Path $path) {
         sl $path
-        git pull
+        gup
+        docker-compose down
+        docker-compose up -d nginx mysql workspace
+        sl --
     }
     else {
-        git clone https://github.com/Laradock/laradock.git
-        sl $path
+        gcl https://github.com/Laradock/laradock.git
+        write "
+            laradock is installed.
+            copy env-example -> .env
+            edit APP_CODE_PATH_HOST
+        ".Replace("  ", "")
     }
-
-    docker-compose down
-    docker-compose up -d nginx mysql workspace
-    sl -
 }
 
 function php ([String]$src = "~\php", [Int]$port) {
