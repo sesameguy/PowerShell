@@ -20,7 +20,7 @@ function laradock {
 }
 
 function php ([String]$src = "~\php", [Int]$port) {
-    $bind = pathValidate $src | mountFolder "/php"
+    $bind = pathValidate $src | mountFolder "/prj"
     $map = $port | ? { $_ -gt 0 -and ($_ -lt 65535) } | % { "-p $_" } # 0 < port < 65535
 
     iex "
@@ -37,7 +37,7 @@ function php ([String]$src = "~\php", [Int]$port) {
 }
 
 function nd ([String]$src = "~\node", [Int]$port) {
-    $bind = pathValidate $src | mountFolder "/node"
+    $bind = pathValidate $src | mountFolder "/prj"
     $map = $port | ? { $_ -gt 0 -and ($_ -lt 65535) } | % { "-p $_" } # 0 < port < 65535
 
     iex "
