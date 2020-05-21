@@ -16,6 +16,7 @@ function laradock {
             copy env-example -> .env
             edit APP_CODE_PATH_HOST
         ".Replace("  ", "")
+        sl -
     }
 }
 
@@ -26,6 +27,7 @@ function php ([String]$src = "~\php", [Int]$port) {
     iex "
         docker create ``
             -e TZ=Asia/Hong_Kong ``
+            -P ``
             $map ``
             $bind ``
             -v php:/root/.vscode-server/extensions ``
