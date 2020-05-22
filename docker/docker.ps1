@@ -1,9 +1,9 @@
-function laradock {
-    sl ~\php
-    $path = "laradock"
+function laradock ([String]$path = ".") {
+    sl $path
+    $repo = "laradock"
 
-    if (Test-Path $path) {
-        sl $path
+    if (Test-Path $repo) {
+        sl $repo
         gup
         docker-compose down
         docker-compose up -d nginx mysql workspace
