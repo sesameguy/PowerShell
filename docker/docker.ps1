@@ -4,10 +4,10 @@ function laradock ([String]$path = ".") {
 
     if (Test-Path $repo) {
         sl $repo
-        gup
         docker-compose down
-        docker-compose up -d nginx mysql workspace
-        sl --
+        git pull -r
+        docker-compose up -d nginx mysql
+        sl -
     }
     else {
         gcl https://github.com/Laradock/laradock.git
@@ -16,8 +16,9 @@ function laradock ([String]$path = ".") {
             copy env-example -> .env
             edit APP_CODE_PATH_HOST
         ".Replace("  ", "")
-        sl -
     }
+
+    sl -
 }
 
 function php ([String]$src = "~\php", [Int]$port) {

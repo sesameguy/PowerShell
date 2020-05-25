@@ -1,7 +1,3 @@
-function gup {
-    git pull -r
-}
-
 function gcl ([String]$url) {
     git clone --depth 1 --recurse-submodules $url
 }
