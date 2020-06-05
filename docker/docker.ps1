@@ -6,7 +6,7 @@ function laradock ([String]$path = ".") {
         sl $repo
         docker-compose down
         git pull -r
-        docker-compose up -d nginx mysql
+        docker-compose up -d nginx mariadb
         sl -
     }
     else {
