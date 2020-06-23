@@ -21,6 +21,10 @@ function laradock ([String]$path = ".") {
     sl -
 }
 
+function dcr {
+    docker-compose exec workspace bash
+}
+
 function php ([String]$src = "~\php", [Int]$port) {
     $bind = pathValidate $src | mountFolder "/prj"
     $map = $port | ? { $_ -gt 0 -and ($_ -lt 65535) } | % { "-p $_" } # 0 < port < 65535
