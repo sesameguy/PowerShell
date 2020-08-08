@@ -1,22 +1,9 @@
-function laradock ([String]$path = ".") {
-    sl $path
-    $repo = "laradock"
+function lara () {
+    sl "~/laradock"
 
-    if (Test-Path $repo) {
-        sl $repo
-        docker-compose down
-        git pull -r
-        docker-compose up -d nginx mariadb
-        sl -
-    }
-    else {
-        gcl https://github.com/Laradock/laradock.git
-        write "
-            laradock is installed.
-            copy env-example -> .env
-            edit APP_CODE_PATH_HOST
-        ".Replace("  ", "")
-    }
+    docker-compose down
+    git pull -r
+    docker-compose up -d nginx mariadb
 
     sl -
 }
@@ -25,30 +12,12 @@ function dcr {
     docker-compose exec workspace bash
 }
 
-function php ([String]$src = "~\php", [Int]$port) {
-    $bind = pathValidate $src | mountFolder "/prj"
-    $map = $port | ? { $_ -gt 0 -and ($_ -lt 65535) } | % { "-p $_" } # 0 < port < 65535
-
-    iex "
-        docker create ``
-            -e TZ=Asia/Hong_Kong ``
-            -P ``
-            $map ``
-            $bind ``
-            -v php:/root/.vscode-server/extensions ``
-            --tmpfs /root/.cache ``
-            --tmpfs /tmp ``
-            -i ``
-            tmpac/php
-    "
-}
-
 function nd ([String]$src = "~\node", [Int]$port) {
     $bind = pathValidate $src | mountFolder "/prj"
     $map = $port | ? { $_ -gt 0 -and ($_ -lt 65535) } | % { "-p $_" } # 0 < port < 65535
 
     iex "
-        docker create ``
+        docker run ``
             -e TZ=Asia/Hong_Kong ``
             -P ``
             $map ``
@@ -56,7 +25,7 @@ function nd ([String]$src = "~\node", [Int]$port) {
             -v node:/root/.vscode-server/extensions ``
             --tmpfs /root/.cache ``
             --tmpfs /tmp ``
-            -i ``
+            -di ``
             tmpac/node
     "
 }
