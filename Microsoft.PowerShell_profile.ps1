@@ -49,8 +49,8 @@ function e {
 
 Set-PSReadLineKeyHandler Tab MenuComplete
 
-Import-Module ~\Documents\PowerShell\docker\docker.ps1
-Import-Module ~\Documents\PowerShell\completion\_fd.ps1
-Import-Module ~\Documents\PowerShell\completion\_rg.ps1
+Import-Module "$PSScriptRoot\docker\docker.ps1"
+Import-Module "$PSScriptRoot\completion\_fd.ps1"
+Import-Module "$PSScriptRoot\completion\_rg.ps1"
 
 iex (&starship init powershell)
