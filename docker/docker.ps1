@@ -1,14 +1,12 @@
 function lara () {
     sl "~/laradock"
-
     docker-compose down
     git pull -r
     docker-compose up -d nginx mariadb
-
-    sl -
 }
 
 function dcr {
+    sl "~/laradock"
     docker-compose exec workspace bash
 }
 
