@@ -1,18 +1,23 @@
-function gcl ([String]$url) {
-    git clone --depth 1 --recurse-submodules $url
-}
-
-function de {
-    drone exec
-}
-
-function yd {
-    Param
-    (
+function gcl {
+    Param(
+        [Switch]$d,
         [Parameter(Mandatory, ValueFromPipeline)]
         [String]$url
     )
 
+    $option = $d ? '--depth 1' : ''
+    iex "git clone $option --recurse-submodules $url"
+}
+
+function gr ([String]$hash) {
+    git rebase -i $hash
+}
+
+function gpf () {
+    git push -f
+}
+
+function yd ([String]$url) {
     youtube-dl -f bestvideo+bestaudio $url
 }
 
