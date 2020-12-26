@@ -57,5 +57,7 @@ Set-PSReadLineKeyHandler Tab MenuComplete
 Import-Module "$PSScriptRoot\docker\docker.ps1"
 Import-Module "$PSScriptRoot\completion\_fd.ps1"
 Import-Module "$PSScriptRoot\completion\_rg.ps1"
+Import-Module posh-git
+Import-Module DockerCompletion
 
 iex (&starship init powershell)
