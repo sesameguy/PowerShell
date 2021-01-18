@@ -61,3 +61,7 @@ Import-Module posh-git
 Import-Module DockerCompletion
 
 iex (&starship init powershell)
+iex (& {
+        $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
+        (zoxide init --hook $hook powershell) -join "`n"
+    })
