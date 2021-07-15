@@ -48,10 +48,7 @@ function k ([String[]]$process) {
     Get-Process $process | Stop-Process
 }
 
-function e {
-    exit
-}
-
+Set-PSReadlineKeyHandler Ctrl+d DeleteCharOrExit
 Set-PSReadLineKeyHandler Tab MenuComplete
 
 Import-Module "$PSScriptRoot\docker\docker.ps1"
