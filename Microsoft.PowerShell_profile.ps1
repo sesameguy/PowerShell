@@ -1,22 +1,3 @@
-function gcl {
-    Param(
-        [Switch]$d,
-        [Parameter(Mandatory, ValueFromPipeline)]
-        [String]$url
-    )
-
-    $option = $d ? '--depth 1' : ''
-    iex "git clone $option --recurse-submodules $url"
-}
-
-function gr ([String]$hash) {
-    git rebase -i $hash
-}
-
-function gpf () {
-    git push -f
-}
-
 function yd ([String]$url) {
     youtube-dl -f bestvideo+bestaudio $url
 }
@@ -40,23 +21,25 @@ function eol {
     "
 }
 
-function pathValidate ([String]$path) {
-    $path | ? { Test-Path $_ } | Resolve-Path
+function wh ([String]$exe) {
+    gcm $exe | select Source
 }
 
-function k ([String[]]$process) {
-    Get-Process $process | Stop-Process
+function en64 ([String]$utf8) {
+    [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($utf8))
 }
 
-Set-PSReadlineKeyHandler Ctrl+d DeleteCharOrExit
+function de64 ([String]$base64) {
+    [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($base64))
+}
+
+Set-PSReadLineKeyHandler Ctrl+d DeleteCharOrExit
 Set-PSReadLineKeyHandler Tab MenuComplete
 
-Import-Module "$PSScriptRoot\docker\docker.ps1"
-Import-Module "$PSScriptRoot\completion\_fd.ps1"
-Import-Module "$PSScriptRoot\completion\_hyperfine.ps1"
-Import-Module "$PSScriptRoot\completion\_rg.ps1"
-Import-Module posh-git
+ls $PSScriptRoot\Completion,$PSScriptRoot\Scripts -Filter *.ps1 -Recurse | Import-Module
 Import-Module DockerCompletion
+Import-Module posh-git
+Import-Module PSFzf
 
 iex (&starship init powershell)
 iex (& {

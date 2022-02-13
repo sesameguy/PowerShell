@@ -1,3 +1,20 @@
+function pathValidate ([String]$path) {
+    $path | ? { Test-Path $_ } | Resolve-Path
+}
+
+# docker bind mount
+function mountFolder {
+    Param
+    (
+        [String]$dst,
+
+        [Parameter(ValueFromPipeline)]
+        [String]$src
+    )
+
+    $src | ? { $_ } | % { "-v $($_ -replace '\\', '/'):$dst" }
+}
+
 function lara () {
     sl "~/laradock"
     docker-compose down
@@ -104,15 +121,6 @@ function watchtower {
         containrrr/watchtower
 }
 
-# docker bind mount
-function mountFolder {
-    Param
-    (
-        [String]$dst,
-
-        [Parameter(ValueFromPipeline)]
-        [String]$src
-    )
-
-    $src | ? { $_ } | % { "-v $($_ -replace '\\', '/'):$dst" }
+function mitm {
+    docker run --rm -it -v $Env:USERPROFILE\Desktop\.mitmproxy:/home/mitmproxy/.mitmproxy -p 8080:8080 -p 8081:8081 mitmproxy/mitmproxy mitmweb --web-host 0.0.0.0
 }
