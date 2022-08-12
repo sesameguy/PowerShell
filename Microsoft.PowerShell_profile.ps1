@@ -33,10 +33,20 @@ function de64 ([String]$base64) {
     [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($base64))
 }
 
+function Set-Hosts {
+    code C:\Windows\System32\drivers\etc
+}
+
+function dn ([String]$uri, [String]$loc = '.') {
+    $folder = rvpa $loc
+    $file = Split-Path $uri -Leaf
+    iwr $uri -OutFile (Join-Path $folder $file)
+}
+
 Set-PSReadLineKeyHandler Ctrl+d DeleteCharOrExit
 Set-PSReadLineKeyHandler Tab MenuComplete
 
-ls $PSScriptRoot\Completion,$PSScriptRoot\Scripts -Filter *.ps1 -Recurse | Import-Module
+ls $PSScriptRoot\Completion, $PSScriptRoot\Scripts -Filter *.ps1 -Recurse | Import-Module
 Import-Module DockerCompletion
 Import-Module posh-git
 Import-Module PSFzf
@@ -44,5 +54,5 @@ Import-Module PSFzf
 iex (&starship init powershell)
 iex (& {
         $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
-        (zoxide init --hook $hook powershell) -join "`n"
+        (zoxide init --hook $hook powershell | Out-String)
     })
